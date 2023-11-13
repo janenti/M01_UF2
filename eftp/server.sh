@@ -1,5 +1,5 @@
 #!/bin/bash
-CLIENT="localhost"
+CLIENT=`ip a | grep inet | head -n 3 | tail -n 1 | cut -d " " -f 6 | cut -d "/" -f 1`
 PORT=3333
 echo "Servidor de EFTP"
 
