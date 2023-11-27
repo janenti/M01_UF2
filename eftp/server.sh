@@ -1,10 +1,10 @@
-#!/bin/bash
 CLIENT=`ip a | grep inet | head -n 3 | tail -n 1 | cut -d " " -f 6 | cut -d "/" -f 1`
 PORT=3333
+TIMEOUT=1
 echo "Servidor de EFTP"
 
 echo "(0) Listen"
-DATA=`nc -l -p $PORT -w 0`
+DATA=`nc -l -p $PORT  -w $TIMEOUT`
 echo $DATA
 
 echo "(3) Test & Send"
@@ -21,7 +21,7 @@ sleep 1
 echo "OK_HEADER" | nc $CLIENT $PORT
 
 echo "(4) Listen"
-DATA=`nc -l -p $PORT -w 0`
+DATA=`nc -l -p $PORT  -w $TIMEOUT`
 
 
 echo "(7) Test & Send (Handshake)"
@@ -37,7 +37,7 @@ sleep 1
 echo "OK_HANDSHAKE" | nc $CLIENT $PORT
 
 echo "(8) Listen"
-DATA=`nc -l -p $PORT -w 0`
+DATA=`nc -l -p $PORT  -w $TIMEOUT`
 
 echo "(12) Test & Store & Send"
 PREFIX=`echo $DATA | cut -d " " -f 1`
@@ -52,7 +52,7 @@ fi
 FILE_NAME= `echo $DATA | cut -d " " -f 2`
 
 echo "(13)Listen"
-DATA=`nc -l -p $PORT -w 0`
+DATA=`nc -l -p $PORT  -w $TIMEOUT`
 
 
 
