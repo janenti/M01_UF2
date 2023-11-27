@@ -2,6 +2,8 @@
 SERVER="localhost"
 PORT=3333
 TIMEOUT=1
+FILE_NAME="fary1.txt"
+HASH=`cat "$FILE_NAME" | md5sum | cut -d " " -f 1`
 echo "(1) Send"
 echo "EFTP 1.0" | nc $SERVER $PORT
 
@@ -35,7 +37,7 @@ fi
 
 sleep 1
 echo "(10) Send"
-echo "FILE_NAME fary1.txt" | nc $SERVER $PORT
+echo "FILE_NAME fary1.txt $HASH " | nc $SERVER $PORT
 
 echo "(11) Listen"
 DATA=`nc -l -p $PORT -w $TIMEOUT `
@@ -53,3 +55,15 @@ cat imgs/fary1.txt | nc $SERVER $PORT
 echo "(15) Listen"
 DATA=`nc -l -p $PORT -w $TIMEOUT `
 
+if [ "$DATA" != "OK_DATA" ]
+then
+	echo "Error 4: BAD DATA"
+	exit 4
+fi
+
+echo "(18) Send"
+
+echo "(19) Listen"
+
+echo "Fin"
+exit 0
