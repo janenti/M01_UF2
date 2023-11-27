@@ -1,5 +1,15 @@
 #!/bin/bash
-SERVER="10.65.0.57"
+
+echo $#
+
+if [ $# = 0 ] 
+then 
+	SERVER="localhost"
+elif [ $# = 1 ]
+then 
+	SERVER=$1
+fi 
+
 IP=`ip address | grep inet | grep enp0s3 | cut -d " " -f 6 | cut -d "/" -f 1`
 PORT=3333
 
@@ -41,8 +51,26 @@ then
 fi
 sleep 1
 
-echo "(10) Send" 
-FILE_NAME="fary1.txt"
+echo "(9a)" SEND NUM FILES
+NUM_FILES=`ls imgs/ | wc -l`
+sleep 1
+echo "NUM_FILES $NUM_FILES" | nc $SERVER $PORT
+
+echo "(9b) Listen OK/KO NUM FILES" 
+DATA=`nc -l -p $PORT -w $TIMEOUT`
+if [ "$DATA" != "OK_FILE_NUM"  ]
+then
+	echo "ERROR 3a: WRONG FILE NUM"
+	exit 3
+fi
+
+for FILE_NAME in `ls imgs/`
+do
+
+echo "(10b) Send FILE NAME"
+
+sleep 1
+#FILE_NAME="fary1.txt"
 FILEMD5=`echo "$FILE_NAME" | md5sum | cut -d " " -f 1`
 echo "FILE_NAME $FILE_NAME $FILEMD5" | nc $SERVER $PORT
 sleep 1
@@ -85,5 +113,7 @@ then
 	echo "ERROR: FILE MD5"
 	exit 5
 fi
+
+done
 echo "FIN"
 exit 0

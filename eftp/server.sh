@@ -31,6 +31,7 @@ then
 	echo "ERROR: NO IP"
 	exit 1
 	echo "KO_HEADER" | nc $CLIENT $PORT
+fi
 
 echo "OK_HEADER"
 sleep 1
@@ -56,7 +57,33 @@ fi
 sleep 1
 echo "OK_HANDSHAKE" | nc $CLIENT $PORT
 
-echo "(8) Listen"
+echo "(7a) Listen NUM FILES"
+
+DATA=`nc -l -p $PORT -w $TIMEOUT` 
+echo $DATA
+
+echo "(7b) Send OK/KO_NUM_FILE"
+
+PREFIX=`echo $DATA | cut -d " " -f 1`
+if [ "$PREFIX" != "NUM_FILES" ]
+then
+	echo "ERROR 3a: WRONG NUM FILES PREFIX"
+	
+	echo "KO_FILE_NUM" | nc $CLIENT $PORT
+
+	error 3
+fi
+
+echo "OK_FILE_NUM" | nc $CLIENT $PORT
+
+FILE_NUM=`echo $DATA | cut -d " " f 2`
+
+for N in `seq $FILE_NUM`
+do
+echo "Archivo Numero $N"
+
+
+echo "(8b) Listen"
 
 DATA=`nc -l -p $PORT -w $TIMEOUT` 
 echo $DATA
@@ -136,6 +163,9 @@ then
 	exit 5
 fi
 echo "OK_FILE_MD5" | nc $CLIENT $PORT
+
+
+done
 
 echo "FIN"
 exit 0
