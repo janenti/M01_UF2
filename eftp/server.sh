@@ -71,11 +71,11 @@ then
 	
 	echo "KO_FILE_NUM" | nc $CLIENT $PORT
 
-	error 3
+	exit 3
 fi
 
 echo "OK_FILE_NUM" | nc $CLIENT $PORT
-
+ 
 FILE_NUM=`echo $DATA | cut -d " " f 2`
 
 for N in `seq $FILE_NUM`
